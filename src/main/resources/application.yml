@@ -1,0 +1,110 @@
+spring:
+  datasource:
+      test1db:
+          name: test1db
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: jdbc:mysql://192.168.1.19:3306/test1db?useUnicode=true&characterEncoding=UTF-8
+          username: ENC(dGVzdDFkYg==) #test1db
+          password: ENC(dGVzdDFkYlBhc3M=) #test1dbPass
+          driver-class-name: com.mysql.jdbc.Driver
+          minIdle: 1
+          maxActive: 2
+          initialSize: 1
+          timeBetweenEvictionRunsMillis: 3000
+          minEvictableIdleTimeMillis: 300000
+          validationQuery: SELECT 1 FROM DUAL
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+      test2db:
+          name: test2db
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: jdbc:mysql://192.168.1.20:3306/test2db?useUnicode=true&characterEncoding=UTF-8
+          username: ENC(dGVzdDJkYg==) #test2db
+          password: ENC(dGVzdDJkYlBhc3M=) #test2dbPass
+          driver-class-name: com.mysql.jdbc.Driver
+          minIdle: 1
+          maxActive: 2
+          initialSize: 1
+          timeBetweenEvictionRunsMillis: 3000
+          minEvictableIdleTimeMillis: 300000
+          validationQuery: SELECT 1 FROM DUAL
+          testWhileIdle: true
+          testOnBorrow: false
+          testOnReturn: false
+  redis:
+      database: 0
+      password:
+      cluster:
+        nodes:
+            - 192.168.30.90:10501
+        maxRedirects: 6
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: -1
+  kafka:
+    bootstrap-servers: localhost:9092
+
+################### Redis Single Node ###################
+#spring:
+#  redis:
+#    database: 0
+#    host: 192.168.20.25
+#    password:
+#    port: 6379
+#    pool:
+#      max-idle: 8
+#      min-idle: 0
+#      max-active: 8
+#      max-wait: -1
+################### Redis Single Node ###################
+
+# 这里可以配置更多的storm apps优化参数，目前只有parallelismHint（并行度）
+storm:
+  props:
+    topologyName: testTopology
+    topologyWorkers: 1
+    numTasks: 1
+    topologyMaxSpoutPending: 5000
+    topologyMessageTimeoutSecs: 30
+  datasource:
+      mysql:
+        dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
+        dataSourceUrl: jdbc:mysql://192.168.1.20:3306/test2db?useUnicode=true&characterEncoding=UTF-8
+        dataSourceUser: ENC(dGVzdDJkYg==) #test2db
+        dataSourcePassword: ENC(dGVzdDJkYlBhc3M=) #test2dbPass
+  spout:
+    kafkaProducerSpout:
+      id: kafkaSpout
+      parallelismHint: 5
+      topic: test
+    kafkaSpout:
+      id: kafkaSpout
+      parallelismHint: 5
+      topic: test
+      brokerZkStr: hadoopNode
+      zkRoot: /test
+  bolt:
+    splitSentenceBolt:
+        parallelismHint: 8
+    wordCountBolt:
+        parallelismHint: 12
+    wordCountToRedisBolt:
+        parallelismHint: 12
+    wordCountToMySQLBolt:
+        parallelismHint: 4
+        tableName: testdb
+        queryTimeoutSecs: 30
+        insertQuery: insert into testdb values (?,?)
+    rollingWordCountBolt:
+        parallelismHint: 8
+        windowLengthInSeconds: 300
+        emitFrequencyInSeconds: 60
+    intermediateRankingsWordCountBolt:
+        parallelismHint: 8
+        topN: 10
+    totalRankingsWordCountBolt:
+        parallelismHint: 8
+        topN: 10

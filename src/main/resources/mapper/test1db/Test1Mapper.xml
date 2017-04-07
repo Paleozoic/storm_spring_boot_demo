@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maxplus1.demo.dao.test1db.Test1Dao">
+
+    <resultMap id="test1" type="com.maxplus1.demo.entity.Test1Pojo">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <select id="getTest1" resultMap="test1">
+      SELECT  id,`name`
+      FROM test1db.test
+      WHERE id=#{id}
+    </select>
+</mapper>
