@@ -127,7 +127,8 @@ public class DemoTopologyBuilder {
                 .fieldsGrouping(splitSentenceBoltBuilder.getId(), new Fields("word"));
 
         //分词数据写入Mysql
-        builder.setBolt(wordCountToMySQLBoltBuilder.getId(),wordCountToMySQLBolt,wordCountToMySQLBoltBuilder.getParallelismHint());
+        builder.setBolt(wordCountToMySQLBoltBuilder.getId(),wordCountToMySQLBolt,wordCountToMySQLBoltBuilder.getParallelismHint())
+                .shuffleGrouping(wordCountBoltBuilder.getId());
 
         //所有单词的topN
         builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
