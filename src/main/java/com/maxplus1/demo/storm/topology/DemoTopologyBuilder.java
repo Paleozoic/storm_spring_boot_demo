@@ -116,7 +116,7 @@ public class DemoTopologyBuilder {
          * 将IntermediateRankingsBolt统计的Rankings全部汇聚于一个bolt实例（TotalRankingsBolt）进行统一的Rankings统计。类似与hadoop的reduce。
          * globalGrouping意为将数据分配给同一个task处理。
          * {@link org.apache.storm.starter.bolt.TotalRankingsBolt} 合并Rankings
-         * PS：这里是汇聚每个IntermediateRankingsBolt上的Rankings。所以需要通过globalGrouping保证所有Tuple发送给一个bolt的一个task处理（保证所有数据进入同一个bolt示例）
+         * PS：这里是汇聚每个IntermediateRankingsBolt上的Rankings。所以需要通过globalGrouping保证所有Tuple发送给一个bolt的一个task处理（保证所有数据进入同一个bolt实例）
          */
         builder.setBolt(totalRankingsWordCountBoltBuilder.getId(), totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
                 .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
