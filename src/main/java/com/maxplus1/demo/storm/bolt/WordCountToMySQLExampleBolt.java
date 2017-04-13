@@ -117,6 +117,11 @@ public class WordCountToMySQLExampleBolt extends AbstractJdbcBolt {
     }
 
     @Override
+    protected void process(Tuple tuple) {
+
+    }
+
+    @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
 
     }

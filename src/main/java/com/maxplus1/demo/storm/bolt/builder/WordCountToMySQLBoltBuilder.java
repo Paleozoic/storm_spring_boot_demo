@@ -42,16 +42,16 @@ public class WordCountToMySQLBoltBuilder extends BoltBuilder {
         hikariConfigMap.put("dataSource.url", mySQLProps.getDataSourceUrl());
         hikariConfigMap.put("dataSource.user", mySQLProps.getDataSourceUser());
         hikariConfigMap.put("dataSource.password", mySQLProps.getDataSourcePassword());
-        /*ConnectionProvider connectionProvider = new HikariCPConnectionProvider(hikariConfigMap);
+        ConnectionProvider connectionProvider = new HikariCPConnectionProvider(hikariConfigMap);
 
         JdbcMapper simpleJdbcMapper = new SimpleJdbcMapper(tableName, connectionProvider);
 
-        JdbcInsertBolt insertBolt1 = new JdbcInsertBolt(connectionProvider, simpleJdbcMapper)
+        /*JdbcInsertBolt insertBolt1 = new JdbcInsertBolt(connectionProvider, simpleJdbcMapper)
                 .withTableName(tableName)
-                .withQueryTimeoutSecs(queryTimeoutSecs);
+                .withQueryTimeoutSecs(queryTimeoutSecs);*/
         JdbcInsertBolt insertBolt2 = new JdbcInsertBolt(connectionProvider, simpleJdbcMapper)
                 .withInsertQuery(insertQuery)
-                .withQueryTimeoutSecs(queryTimeoutSecs);*/
-        return null;
+                .withQueryTimeoutSecs(queryTimeoutSecs);
+        return insertBolt2;
     }
 }

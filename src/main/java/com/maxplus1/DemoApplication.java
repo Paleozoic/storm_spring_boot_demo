@@ -10,6 +10,8 @@ import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.loader.LaunchedURLClassLoader;
+import org.springframework.boot.loader.Launcher;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication
@@ -18,10 +20,14 @@ public class DemoApplication {
 
     public static void main(String[] args)
             throws InvalidTopologyException, AuthorizationException, AlreadyAliveException {
+//        LaunchedURLClassLoader launchedURLClassLoader;
+//        Launcher
         ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
         StormProps stormProps = context.getBean(StormProps.class);
         TopologyBuilder topologyBuilder = context.getBean(TopologyBuilder.class);
         remoteSubmit(stormProps,topologyBuilder,new Config());
+//        context.close();
+        SpringApplication.exit(context);
     }
 
     private static void remoteSubmit(StormProps stormProps,TopologyBuilder builder, Config conf)

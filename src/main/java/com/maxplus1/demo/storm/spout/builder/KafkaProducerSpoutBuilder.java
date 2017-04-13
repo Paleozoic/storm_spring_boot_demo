@@ -1,5 +1,6 @@
 package com.maxplus1.demo.storm.spout.builder;
 
+import com.maxplus1.demo.config.kafka.DefaultKafkaProducerFactorySerializable;
 import com.maxplus1.demo.storm.spout.KafkaProducerSpout;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class KafkaProducerSpoutBuilder extends SpoutBuilder{
 
     private String topic;
     @Autowired
-    private DefaultKafkaProducerFactory defaultKafkaProducerFactory;
+    private DefaultKafkaProducerFactorySerializable defaultKafkaProducerFactory;
 
     @Bean("kafkaProducerSpout")
     public KafkaProducerSpout buildSpout() {

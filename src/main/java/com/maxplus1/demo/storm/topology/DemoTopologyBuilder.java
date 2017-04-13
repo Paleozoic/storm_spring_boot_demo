@@ -131,9 +131,9 @@ public class DemoTopologyBuilder {
                 .shuffleGrouping(wordCountBoltBuilder.getId());
 
         //所有单词的topN
-        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
+        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
                 .fieldsGrouping(wordCountBoltBuilder.getId(), new Fields("word"));
-        builder.setBolt(totalRankingsWordCountBoltBuilder.getId(), totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
+        builder.setBolt(totalRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
                 .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
 
         return builder;

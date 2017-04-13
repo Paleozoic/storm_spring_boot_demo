@@ -13,8 +13,8 @@ public class RedisConfUtils {
      * @param redisProperties
      * @return
      */
-    public static RedisClusterConfiguration getRedisClusterConfiguration(RedisProperties redisProperties){
-        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
+    public static RedisClusterConfigurationSerializable getRedisClusterConfiguration(RedisProperties redisProperties){
+        RedisClusterConfigurationSerializable redisClusterConfiguration = new RedisClusterConfigurationSerializable();
 
         if (redisProperties.getCluster() == null) {
             return null;

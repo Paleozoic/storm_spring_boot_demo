@@ -10,6 +10,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * http://docs.spring.io/spring-boot/docs/1.5.3.BUILD-SNAPSHOT/reference/htmlsingle/#boot-features-kafka
@@ -26,10 +27,12 @@ public class KafkaConfig {
     @Bean("kafkaProducerFactory")
     public ProducerFactory<?, ?> kafkaProducerFactory(KafkaProperties properties) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
-        return new DefaultKafkaProducerFactory<Object, Object>(producerProperties);
+        return new DefaultKafkaProducerFactorySerializable<>(producerProperties);
     }
 
     /**
+     * 注意：目前Spring Boot自动配置只支持单个分组group-id创建consumer，
+     * 如需要多个应该创建多个不同的DefaultKafkaConsumerFactory properties.getConsumer().setGroupId(groupId);
      * Customized ConsumerFactory bean.
      * @param properties the kafka properties.
      * @return the bean.
@@ -37,6 +40,6 @@ public class KafkaConfig {
     @Bean("kafkaConsumerFactory")
     public ConsumerFactory<?, ?> kafkaConsumerFactory(KafkaProperties properties) {
         Map<String, Object> consumerProperties = properties.buildConsumerProperties();
-        return new DefaultKafkaConsumerFactory<Object, Object>(consumerProperties);
+        return new DefaultKafkaConsumerFactorySerializable<>(consumerProperties);
     }
 }

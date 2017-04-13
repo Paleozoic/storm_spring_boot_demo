@@ -1,5 +1,6 @@
 package com.maxplus1.demo.storm.bolt;
 
+import com.maxplus1.demo.config.redis.RedisClusterConfigurationSerializable;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.storm.task.OutputCollector;
@@ -9,6 +10,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -26,9 +28,11 @@ import java.util.Map;
 public class WordCountToRedisBolt extends BaseRichBolt {
 
 
-    private ValueOperations<String,Long> valueOperations;
+    private final static String HASH_KEY = "WORD_COUNT";
+
+    private HashOperations<String,String,Long> hashOperations;
     @Setter
-    private RedisClusterConfiguration redisClusterConfiguration;
+    private RedisClusterConfigurationSerializable redisClusterConfiguration;
 
 
     /**
@@ -54,12 +58,12 @@ public class WordCountToRedisBolt extends BaseRichBolt {
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
         redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
 
-        this.valueOperations = redisTemplate.opsForValue();
+        this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
     public void execute(Tuple input) {
-        valueOperations.set(input.getString(0),input.getLong(1));
+        hashOperations.put(HASH_KEY,input.getString(0),input.getLong(1));
     }
 
 

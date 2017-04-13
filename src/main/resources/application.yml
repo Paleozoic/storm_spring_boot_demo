@@ -3,9 +3,9 @@ spring:
       test1db:
           name: test1db
           type: com.alibaba.druid.pool.DruidDataSource
-          url: jdbc:mysql://192.168.1.19:3306/test1db?useUnicode=true&characterEncoding=UTF-8
-          username: ENC(dGVzdDFkYg==) #test1db
-          password: ENC(dGVzdDFkYlBhc3M=) #test1dbPass
+          url: jdbc:mysql://192.168.19.20:3306/test?useUnicode=true&characterEncoding=UTF-8
+          username: ENC(aG9sbWVz) #holmes
+          password: ENC(aG9sbWVzQDEyMw==) #holmes@123
           driver-class-name: com.mysql.jdbc.Driver
           minIdle: 1
           maxActive: 2
@@ -19,9 +19,9 @@ spring:
       test2db:
           name: test2db
           type: com.alibaba.druid.pool.DruidDataSource
-          url: jdbc:mysql://192.168.1.20:3306/test2db?useUnicode=true&characterEncoding=UTF-8
-          username: ENC(dGVzdDJkYg==) #test2db
-          password: ENC(dGVzdDJkYlBhc3M=) #test2dbPass
+          url: jdbc:mysql://192.168.19.20:3306/test?useUnicode=true&characterEncoding=UTF-8
+          username: ENC(aG9sbWVz) #holmes
+          password: ENC(aG9sbWVzQDEyMw==) #holmes@123
           driver-class-name: com.mysql.jdbc.Driver
           minIdle: 1
           maxActive: 2
@@ -37,7 +37,7 @@ spring:
       password:
       cluster:
         nodes:
-            - 192.168.30.90:10501
+            - 192.168.19.33:22400
         maxRedirects: 6
       pool:
         max-idle: 8
@@ -45,15 +45,26 @@ spring:
         max-active: 8
         max-wait: -1
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: cna12:9092,cna13:9092,cna14:9092
+
+################### Kafka Topic ###################
+#(1)脚本手工创建
+# bin/kafka-topics.sh --zookeeper cna12:2181 --create --topic stormTest --replication-factor 2 --partitions 3
+# –topic指定topic name
+# –partitions指定分区数，这个参数需要根据broker数和数据量决定，正常情况下，每个broker上两个partition最好；
+# –replication-factor指定partition的replicas数，建议设置为2；
+#(2)程序自动创建：
+# 开启自动创建配置：auto.create.topics.enable=true
+# 使用程序直接往kafka中相应的topic发送数据，如果topic不存在就会按默认配置进行创建。
+################### Kafka Topic ###################
 
 ################### Redis Single Node ###################
 #spring:
 #  redis:
 #    database: 0
-#    host: 192.168.20.25
+#    host: 192.168.19.33:22400
 #    password:
-#    port: 6379
+#    port: 22400
 #    pool:
 #      max-idle: 8
 #      min-idle: 0
@@ -72,20 +83,18 @@ storm:
   datasource:
       mysql:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-        dataSourceUrl: jdbc:mysql://192.168.1.20:3306/test2db?useUnicode=true&characterEncoding=UTF-8
-        dataSourceUser: ENC(dGVzdDJkYg==) #test2db
-        dataSourcePassword: ENC(dGVzdDJkYlBhc3M=) #test2dbPass
+        dataSourceUrl: jdbc:mysql://192.168.19.20:3306/test?useUnicode=true&characterEncoding=UTF-8
+        dataSourceUser: ENC(aG9sbWVz) #holmes
+        dataSourcePassword: ENC(aG9sbWVzQDEyMw==) #holmes@123
   spout:
     kafkaProducerSpout:
-      id: kafkaSpout
       parallelismHint: 5
-      topic: test
+      topic: stormTest
     kafkaSpout:
-      id: kafkaSpout
       parallelismHint: 5
-      topic: test
-      brokerZkStr: hadoopNode
-      zkRoot: /test
+      topic: stormTest
+      brokerZkStr: cna12:2181,cna13:2181,cna14:2181
+      zkRoot: /zkRootTest
   bolt:
     splitSentenceBolt:
         parallelismHint: 8
@@ -97,7 +106,7 @@ storm:
         parallelismHint: 4
         tableName: testdb
         queryTimeoutSecs: 30
-        insertQuery: insert into testdb values (?,?)
+        insertQuery: replace into test.word_count values (?,?)
     rollingWordCountBolt:
         parallelismHint: 8
         windowLengthInSeconds: 300

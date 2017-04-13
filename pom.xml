@@ -18,53 +18,69 @@
 	</parent>
 
 	<properties>
+        <finalName>StormDemo</finalName>
+        <start-class>com.maxplus1.DemoApplication</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!--<scope.type>provided</scope.type>-->
-		<scope.type>compile</scope.type>
+		<scope.type>provided</scope.type>
+		<!--<scope.type>compile</scope.type>-->
 		<java.version>1.8</java.version>
-		<storm.version>1.0.3</storm.version>
+		<storm.version>1.1.0</storm.version>
 		<storm.kafka.version>0.10.2.0</storm.kafka.version>
-		<storm.kafka.artifact.id>kafka_2.10</storm.kafka.artifact.id>
+		<storm.kafka.artifact.id>kafka_${scala.version}</storm.kafka.artifact.id>
+		<scala.version>2.10</scala.version>
 		<lombok.version>1.16.8</lombok.version>
 	</properties>
 
 	<dependencies>
 
-		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-starter</artifactId>
-			<version>${storm.version}</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.apache.storm</groupId>-->
+			<!--<artifactId>storm-starter</artifactId>-->
+			<!--<version>${storm.version}</version>-->
+			<!--<scope>${scope.type}</scope>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.apache.storm</groupId>
 			<artifactId>storm-core</artifactId>
 			<version>${storm.version}</version>
 			<scope>${scope.type}</scope>
-		</dependency>
-        <dependency>
-            <groupId>org.apache.storm</groupId>
-            <artifactId>storm-kafka</artifactId>
-            <version>${storm.version}</version>
-            <scope>${scope.type}</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-kafka</artifactId>
+			<version>${storm.version}</version>
+			<!--<scope>${scope.type}</scope>-->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-kafka-client</artifactId>
+			<version>${storm.version}</version>
+			<!--<scope>${scope.type}</scope>-->
+		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>${storm.kafka.artifact.id}</artifactId>
 			<version>${storm.kafka.version}</version>
-			<scope>${scope.type}</scope>
+			<!--<scope>${scope.type}</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka-clients</artifactId>
 			<version>${storm.kafka.version}</version>
-			<scope>${scope.type}</scope>
+			<!--<scope>${scope.type}</scope>-->
 		</dependency>
         <dependency>
             <groupId>org.apache.storm</groupId>
             <artifactId>storm-jdbc</artifactId>
             <version>${storm.version}</version>
-            <scope>${scope.type}</scope>
+            <!--<scope>${scope.type}</scope>-->
         </dependency>
 
 		<dependency>
@@ -84,7 +100,17 @@
 		<dependency>  <!-- 加上这个才能辨认到log4j2.yml文件 -->
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
-		</dependency>
+        </dependency>
+        <!-- 引入jackson依赖 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-loader</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -133,6 +159,13 @@
             <version>1.11</version>
         </dependency>
 
+
+
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+        </dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -144,18 +177,157 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
-			<scope>${scope.type}</scope>
+			 <scope>${scope.type}</scope>
 		</dependency>
 
 	</dependencies>
 
 	<build>
+        <!-- scope provided是不生效的： http://docs.spring.io/spring-boot/docs/current/maven-plugin/examples/exclude-dependency.html -->
+        <finalName>${finalName}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.apache.storm</groupId>
+                            <artifactId>storm-core</artifactId>
+                        </exclude>
+                        <!--<exclude>-->
+                            <!--<groupId>org.apache.storm</groupId>-->
+                            <!--<artifactId>storm-kafka</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>org.apache.storm</groupId>-->
+                            <!--<artifactId>storm-kafka-client</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>org.apache.kafka</groupId>-->
+                            <!--<artifactId>${storm.kafka.artifact.id}</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>org.apache.kafka</groupId>-->
+                            <!--<artifactId>kafka-clients</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>org.apache.storm</groupId>-->
+                            <!--<artifactId>storm-jdbc</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>org.scala-lang</groupId>-->
+                            <!--<artifactId>scala-library</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<artifactId>clojure</artifactId>-->
+                            <!--<groupId>org.clojure</groupId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>org.apache.curator</groupId>-->
+                            <!--<artifactId>curator-client</artifactId>-->
+                        <!--</exclude>-->
+                        <exclude>
+                            <groupId>org.apache.zookeeper</groupId>
+                            <artifactId>zookeeper</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-log4j12</artifactId>
+                        </exclude>
+                        <!--<exclude>-->
+                            <!--<groupId>com.google.guava</groupId>-->
+                            <!--<artifactId>guava</artifactId>-->
+                        <!--</exclude>-->
+                        <!--<exclude>-->
+                            <!--<groupId>com.zaxxer</groupId>-->
+                            <!--<artifactId>HikariCP</artifactId>-->
+                        <!--</exclude>-->
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
 			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <!--<tasks> //打包fatjar，但是jar太多  效率低，而且运行报错
+                                <unjar src="${project.build.directory}/${finalName}.jar" dest="${project.build.directory}/${finalName}" />
+                                <unjar dest="${project.build.directory}/${finalName}/BOOT-INF/classes">
+                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar"/>
+                                </unjar>
+                                <delete>
+                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar" />
+                                </delete>
+                                <delete file="${project.build.directory}/${finalName}.jar" />
+                                <zip destfile="${project.build.directory}/${finalName}.jar" basedir="${project.build.directory}/${finalName}" />
+                            </tasks>-->
+                            <tasks>
+                                <unjar src="${project.build.directory}/${finalName}.jar" dest="${project.build.directory}/${finalName}" />
+                                <move todir="${project.build.directory}/libs">
+                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar"/>
+                                </move>
+                                <delete>
+                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar" />
+                                </delete>
+                                <delete file="${project.build.directory}/${finalName}.jar" />
+                                <zip destfile="${project.build.directory}/${finalName}.jar" basedir="${project.build.directory}/${finalName}" />
+                                <zip destfile="${project.build.directory}/${finalName}.zip">
+                                    <fileset dir="${project.build.directory}" includes="libs/*.jar" />
+                                    <fileset dir="${project.build.directory}" includes="${finalName}.jar" />
+                                </zip>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<version>2.6</version>-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<addClasspath>true</addClasspath>-->
+                            <!--<classpathPrefix>BOOT-INF/lib/</classpathPrefix>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--<plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>-->
+        </plugins>
 	</build>
 
 
