@@ -1,6 +1,5 @@
 package com.maxplus1.demo.storm.spout;
 
-import com.maxplus1.demo.config.kafka.DefaultKafkaProducerFactorySerializable;
 import lombok.Setter;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -23,14 +22,13 @@ public class KafkaProducerSpout extends BaseRichSpout {
     private Random random;
     private KafkaTemplate<String,String> kafkaTemplate;
     @Setter
-    private DefaultKafkaProducerFactorySerializable defaultKafkaProducerFactory;
+    private Map<String,Object> kafkaPropertiesMap;
     @Setter
     private String topic;
-
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         this.random = new Random();
-        this.kafkaTemplate = new KafkaTemplate<>(defaultKafkaProducerFactory);
+        this.kafkaTemplate = new KafkaTemplate<>(new DefaultKafkaProducerFactory<String, String>(kafkaPropertiesMap));
     }
 
     @Override

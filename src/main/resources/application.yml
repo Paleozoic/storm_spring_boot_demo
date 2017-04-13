@@ -75,7 +75,7 @@ spring:
 # 这里可以配置更多的storm apps优化参数，目前只有parallelismHint（并行度）
 storm:
   props:
-    topologyName: testTopology
+    topologyName: StormDemo
     topologyWorkers: 1
     numTasks: 1
     topologyMaxSpoutPending: 5000

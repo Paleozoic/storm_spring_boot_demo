@@ -289,10 +289,11 @@
                                 </delete>
                                 <delete file="${project.build.directory}/${finalName}.jar" />
                                 <zip destfile="${project.build.directory}/${finalName}.jar" basedir="${project.build.directory}/${finalName}" />
-                                <zip destfile="${project.build.directory}/${finalName}.zip">
-                                    <fileset dir="${project.build.directory}" includes="libs/*.jar" />
-                                    <fileset dir="${project.build.directory}" includes="${finalName}.jar" />
-                                </zip>
+                                <!-- 如果jar没有变更，则可以注释此行 -->
+                                <!--<zip destfile="${project.build.directory}/${finalName}.zip">-->
+                                    <!--<fileset dir="${project.build.directory}" includes="libs/*.jar" />-->
+                                    <!--<fileset dir="${project.build.directory}" includes="${finalName}.jar" />-->
+                                <!--</zip>-->
                             </tasks>
                         </configuration>
                     </execution>

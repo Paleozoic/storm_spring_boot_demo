@@ -13,7 +13,6 @@ public class buildStormCmd {
 
     private final static String PATH_NAME = "target/libs";
     private final static String FINAL_NAME = "StormDemo.jar";
-    private final static String TOPO_NAME = "StormDemo";
 
     @Test
     public void test(){
@@ -24,8 +23,7 @@ public class buildStormCmd {
         });
         cmd.deleteCharAt(cmd.length()-1);
         cmd.append("\" jar ").append(FINAL_NAME)
-                .append(" org.springframework.boot.loader.JarLauncher ")
-                .append(TOPO_NAME);
+                .append(" org.springframework.boot.loader.JarLauncher ");
         System.out.println("====================================");
         System.out.println(cmd.toString());
         System.out.println("====================================");

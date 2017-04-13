@@ -19,13 +19,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class DemoApplication {
 
     public static void main(String[] args)
-            throws InvalidTopologyException, AuthorizationException, AlreadyAliveException {
-//        LaunchedURLClassLoader launchedURLClassLoader;
-//        Launcher
+            throws InvalidTopologyException, AuthorizationException, AlreadyAliveException, InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
         StormProps stormProps = context.getBean(StormProps.class);
         TopologyBuilder topologyBuilder = context.getBean(TopologyBuilder.class);
         remoteSubmit(stormProps,topologyBuilder,new Config());
+//        localSubmit(stormProps.getTopologyName(),topologyBuilder);
 //        context.close();
         SpringApplication.exit(context);
     }

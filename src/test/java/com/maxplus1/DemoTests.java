@@ -17,7 +17,6 @@ public class DemoTests {
 
 	@Test
 	public void contextLoads() {
-
 		System.out.println(kafkaTemplate);
 	}
 

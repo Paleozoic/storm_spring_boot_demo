@@ -110,7 +110,7 @@ public class DemoTopologyBuilder {
          * {@link org.apache.storm.starter.tools.RankableObjectWithFields}:RankableObjectWithFields是Rankable的实现类，根据Fields实现Rank
          */
         builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
-                .fieldsGrouping(rollingWordCountBoltBuilder.getId(), new Fields("word"));
+                .globalGrouping(rollingWordCountBoltBuilder.getId());
 
         /**
          * 将IntermediateRankingsBolt统计的Rankings全部汇聚于一个bolt实例（TotalRankingsBolt）进行统一的Rankings统计。类似与hadoop的reduce。

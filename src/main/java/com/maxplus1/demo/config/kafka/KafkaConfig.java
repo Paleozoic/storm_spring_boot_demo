@@ -10,7 +10,6 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * http://docs.spring.io/spring-boot/docs/1.5.3.BUILD-SNAPSHOT/reference/htmlsingle/#boot-features-kafka
@@ -18,6 +17,19 @@ import java.util.Objects;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
+
+
+    /**
+     * TODO: eggs hurt:Kyro Serialization needs the default constructor and 'implements Serializable'
+     * KafkaProperties and DefaultKafkaProducerFactory can not be Serialized
+     * @param properties
+     * @return
+     */
+    @Bean("kafkaPropertiesMap")
+    public Map<String, Object> kafkaPropertiesMap(KafkaProperties properties) {
+        Map<String, Object> producerProperties = properties.buildProducerProperties();
+        return producerProperties;
+    }
 
     /**
      * Customized ProducerFactory bean.
@@ -27,7 +39,7 @@ public class KafkaConfig {
     @Bean("kafkaProducerFactory")
     public ProducerFactory<?, ?> kafkaProducerFactory(KafkaProperties properties) {
         Map<String, Object> producerProperties = properties.buildProducerProperties();
-        return new DefaultKafkaProducerFactorySerializable<>(producerProperties);
+        return new DefaultKafkaProducerFactory<>(producerProperties);
     }
 
     /**
@@ -40,6 +52,6 @@ public class KafkaConfig {
     @Bean("kafkaConsumerFactory")
     public ConsumerFactory<?, ?> kafkaConsumerFactory(KafkaProperties properties) {
         Map<String, Object> consumerProperties = properties.buildConsumerProperties();
-        return new DefaultKafkaConsumerFactorySerializable<>(consumerProperties);
+        return new DefaultKafkaConsumerFactory<>(consumerProperties);
     }
 }
