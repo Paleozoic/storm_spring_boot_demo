@@ -23,8 +23,9 @@ public class DemoApplication {
         ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
         StormProps stormProps = context.getBean(StormProps.class);
         TopologyBuilder topologyBuilder = context.getBean(TopologyBuilder.class);
-        remoteSubmit(stormProps,topologyBuilder,new Config());
-//        localSubmit(stormProps.getTopologyName(),topologyBuilder);
+        Config config = new Config();
+        remoteSubmit(stormProps,topologyBuilder,config);
+//        localSubmit(stormProps.getTopologyName(),topologyBuilder,config);
 //        context.close();
         SpringApplication.exit(context);
     }
@@ -42,9 +43,8 @@ public class DemoApplication {
      * @param builder
      * @throws InterruptedException
      */
-    private static void localSubmit(String name,TopologyBuilder builder)
+    private static void localSubmit(String name,TopologyBuilder builder, Config conf)
             throws InterruptedException {
-        Config conf = new Config();
         conf.setDebug(true);
         conf.setMaxTaskParallelism(3);
         LocalCluster cluster = new LocalCluster();

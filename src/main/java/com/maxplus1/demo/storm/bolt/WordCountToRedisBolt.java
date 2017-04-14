@@ -44,22 +44,7 @@ public class WordCountToRedisBolt extends BaseRichBolt {
      */
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(
-                RedisConfUtils.getClusterConfiguration(
-                        (RedisProperties) Serializer.INSTANCE.deserialize(redisProperties)));
-        RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory);
-
-        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        redisTemplate.setKeySerializer(stringRedisSerializer);
-        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
-        redisTemplate.setHashKeySerializer(stringRedisSerializer);
-        redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
-        redisTemplate.afterPropertiesSet();
-
-        this.hashOperations = redisTemplate.opsForHash();
+        this.hashOperations = RedisConfUtils.buildRedisTemplate(redisProperties).opsForHash();
     }
 
     @Override

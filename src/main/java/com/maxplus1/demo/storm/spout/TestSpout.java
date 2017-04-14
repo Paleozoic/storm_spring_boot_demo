@@ -8,12 +8,14 @@ import org.apache.storm.topology.base.BaseRichSpout;
 import java.util.Map;
 
 /**
+ * TODO: 待实现
  * 可以实现自己的Spout来提取数据源，
  * 比如提取队列数据，可以在nextTuple的时候出队
  * Created by xiaolong.qiu on 2017/3/28.
  * {@link org.apache.storm.spout.ISpout}
  * {@link org.apache.storm.topology.IComponent}
  */
+@Deprecated
 public class TestSpout extends BaseRichSpout {
 
 
