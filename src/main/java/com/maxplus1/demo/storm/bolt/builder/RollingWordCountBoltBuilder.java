@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "storm.bolt.rollingWordCountBolt")
 public class RollingWordCountBoltBuilder extends BoltBuilder{
 
-    private int windowLengthInSeconds = 300;
-    private int emitFrequencyInSeconds = 60;
+    private int windowLengthInSeconds = 300;//时间窗口300s
+    private int emitFrequencyInSeconds = 60;//没60s发射一次数据
 
     @Bean("rollingWordCountBolt")
     public RollingCountBolt buildBolt() {
