@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
  * Created by xiaolong.qiu on 2017/4/11.
  * 参考自：{@link org.apache.storm.kafka.spout.KafkaSpout}
  */
+@Deprecated
 public class KafkaSpout<K, V> extends BaseRichSpout {
     private static final long serialVersionUID = 4151921085047987154L;
     //Initial delay for the commit and subscription refresh timers

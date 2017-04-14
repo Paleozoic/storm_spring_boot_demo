@@ -10,8 +10,6 @@ import org.apache.storm.generated.InvalidTopologyException;
 import org.apache.storm.topology.TopologyBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.loader.LaunchedURLClassLoader;
-import org.springframework.boot.loader.Launcher;
 import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication

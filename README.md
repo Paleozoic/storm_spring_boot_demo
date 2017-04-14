@@ -8,10 +8,16 @@
 
 # 未完成，Coding中……
 
+# 进度
+- 本地模式半调通状态……
+
 # word count table defination
+```sql
 CREATE TABLE `word_count` (
   `word` varchar(255) COLLATE utf8_bin NOT NULL,
   `count` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`word`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin
+```
+
 
