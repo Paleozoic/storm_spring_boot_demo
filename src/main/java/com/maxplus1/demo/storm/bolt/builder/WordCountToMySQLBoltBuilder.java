@@ -46,12 +46,9 @@ public class WordCountToMySQLBoltBuilder extends BoltBuilder {
 
         JdbcMapper simpleJdbcMapper = new SimpleJdbcMapper(tableName, connectionProvider);
 
-        /*JdbcInsertBolt insertBolt1 = new JdbcInsertBolt(connectionProvider, simpleJdbcMapper)
-                .withTableName(tableName)
-                .withQueryTimeoutSecs(queryTimeoutSecs);*/
-        JdbcInsertBolt insertBolt2 = new JdbcInsertBolt(connectionProvider, simpleJdbcMapper)
+        JdbcInsertBolt insertBolt = new JdbcInsertBolt(connectionProvider, simpleJdbcMapper)
                 .withInsertQuery(insertQuery)
                 .withQueryTimeoutSecs(queryTimeoutSecs);
-        return insertBolt2;
+        return insertBolt;
     }
 }

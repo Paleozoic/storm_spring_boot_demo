@@ -1,6 +1,7 @@
 package com.maxplus1.demo.storm.bolt;
 
-import com.maxplus1.demo.config.redis.RedisClusterConfigurationSerializable;
+import com.maxplus1.demo.config.redis.RedisConfUtils;
+import com.maxplus1.demo.utils.Serializer;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.storm.task.OutputCollector;
@@ -8,6 +9,7 @@ import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +24,6 @@ import java.util.Map;
  * Created by xiaolong.qiu on 2017/3/28.
  */
 @Slf4j
-
 public class WordCountToRedisBolt extends BaseRichBolt {
 
 
@@ -30,7 +31,7 @@ public class WordCountToRedisBolt extends BaseRichBolt {
 
     private HashOperations<String,String,Long> hashOperations;
     @Setter
-    private RedisClusterConfigurationSerializable redisClusterConfiguration;
+    private byte[] redisProperties;
 
 
     /**
@@ -44,8 +45,9 @@ public class WordCountToRedisBolt extends BaseRichBolt {
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
 
-//        RedisClusterConfiguration redisClusterConfiguration = (RedisClusterConfiguration) stormConf.get("redisClusterConfiguration");
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisClusterConfiguration);
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(
+                RedisConfUtils.getClusterConfiguration(
+                        (RedisProperties) Serializer.INSTANCE.deserialize(redisProperties)));
         RedisTemplate<String, Long> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
 
@@ -55,13 +57,14 @@ public class WordCountToRedisBolt extends BaseRichBolt {
         redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
         redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
+        redisTemplate.afterPropertiesSet();
 
         this.hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
     public void execute(Tuple input) {
-        hashOperations.put(HASH_KEY,input.getString(0),input.getLong(1));
+        hashOperations.put(HASH_KEY,input.getStringByField("obj"),input.getLongByField("count"));
     }
 
 

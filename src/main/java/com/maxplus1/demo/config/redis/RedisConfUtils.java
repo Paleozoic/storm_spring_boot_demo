@@ -13,9 +13,7 @@ public class RedisConfUtils {
      * @param redisProperties
      * @return
      */
-    public static RedisClusterConfigurationSerializable getRedisClusterConfiguration(RedisProperties redisProperties){
-        RedisClusterConfigurationSerializable redisClusterConfiguration = new RedisClusterConfigurationSerializable();
-
+    public static RedisClusterConfiguration  getClusterConfiguration(RedisProperties redisProperties) {
         if (redisProperties.getCluster() == null) {
             return null;
         }
@@ -26,6 +24,6 @@ public class RedisConfUtils {
         if (clusterProperties.getMaxRedirects() != null) {
             config.setMaxRedirects(clusterProperties.getMaxRedirects());
         }
-        return redisClusterConfiguration;
+        return config;
     }
 }

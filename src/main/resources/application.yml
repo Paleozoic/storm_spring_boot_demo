@@ -88,32 +88,39 @@ storm:
         dataSourcePassword: ENC(aG9sbWVzQDEyMw==) #holmes@123
   spout:
     kafkaProducerSpout:
-      parallelismHint: 5
+      parallelismHint: 3
       topic: stormTest
     kafkaSpout:
-      parallelismHint: 5
-      topic: stormTest
-      brokerZkStr: cna12:2181,cna13:2181,cna14:2181
-      zkRoot: /zkRootTest
+          parallelismHint: 3
+          topic: stormTest
+          brokerZkStr: cna12:2181,cna13:2181,cna14:2181
+          zkRoot: /zkRootTest
+    kafkaClientSpout:
+      parallelismHint: 3
+      groupId: stormTestGroupId
+      topics:
+        - stormTest
+      bootstrapServers: cna12:9092,cna13:9092,cna14:9092
   bolt:
     splitSentenceBolt:
-        parallelismHint: 8
+        parallelismHint: 3
     wordCountBolt:
-        parallelismHint: 12
+        parallelismHint: 3
     wordCountToRedisBolt:
-        parallelismHint: 12
+        parallelismHint: 3
     wordCountToMySQLBolt:
-        parallelismHint: 4
-        tableName: testdb
+        parallelismHint: 3
+        tableName: test.word_count
         queryTimeoutSecs: 30
-        insertQuery: replace into test.word_count values (?,?)
+        insertQuery: replace into test.word_count(word,count) values (?,?)
     rollingWordCountBolt:
-        parallelismHint: 8
+        parallelismHint: 3
         windowLengthInSeconds: 300
         emitFrequencyInSeconds: 60
     intermediateRankingsWordCountBolt:
-        parallelismHint: 8
+        parallelismHint: 3
         topN: 10
     totalRankingsWordCountBolt:
-        parallelismHint: 8
+        parallelismHint: 3
         topN: 10
+

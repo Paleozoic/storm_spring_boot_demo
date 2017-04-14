@@ -1,7 +1,7 @@
 package com.maxplus1.demo.storm.bolt.builder;
 
-import com.maxplus1.demo.config.redis.RedisConfUtils;
 import com.maxplus1.demo.storm.bolt.WordCountToRedisBolt;
+import com.maxplus1.demo.utils.Serializer;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class WordCountToRedisBoltBuilder extends BoltBuilder {
     public WordCountToRedisBolt buildBolt() {
         super.setId("wordCountToRedisBolt");
         WordCountToRedisBolt wordCountToRedisBolt = new WordCountToRedisBolt();
-        wordCountToRedisBolt.setRedisClusterConfiguration(RedisConfUtils.getRedisClusterConfiguration(redisProperties));
+        wordCountToRedisBolt.setRedisProperties(Serializer.INSTANCE.serialize(redisProperties));
         return wordCountToRedisBolt;
     }
 

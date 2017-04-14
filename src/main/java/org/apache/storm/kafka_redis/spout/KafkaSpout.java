@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * TODO: 打算写一个offset存放于redis的Spout，甚至支持任意数据源
+ *
  * Created by xiaolong.qiu on 2017/4/11.
  * 参考自：{@link org.apache.storm.kafka.spout.KafkaSpout}
  */

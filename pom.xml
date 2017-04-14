@@ -22,8 +22,8 @@
         <start-class>com.maxplus1.DemoApplication</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<scope.type>provided</scope.type>
-		<!--<scope.type>compile</scope.type>-->
+		<!--<scope.type>provided</scope.type>-->
+		<scope.type>compile</scope.type>
 		<java.version>1.8</java.version>
 		<storm.version>1.1.0</storm.version>
 		<storm.kafka.version>0.10.2.0</storm.kafka.version>

@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * TODO：待改造
  * 参考自：（一般情况下可以直接使用SimpleJdbcMapper）
  * {@link org.apache.storm.jdbc.bolt.JdbcInsertBolt}
  * http://storm.apache.org/releases/1.1.0/storm-jdbc.html
  * Created by xiaolong.qiu on 2017/3/28.
  */
 @Slf4j
+@Deprecated
 public class WordCountToMySQLExampleBolt extends AbstractJdbcBolt {
 
     private String tableName;

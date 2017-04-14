@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * KafkaClient可以同时订阅多个topic
+ * KafkaClient可以同时订阅多个topic，是新版的Java版本kafka API实现（推荐）
+ * 偏移量写回kafka
  * Created by xiaolong.qiu on 2017/3/29.
  */
 @Getter
@@ -20,6 +21,7 @@ public class KafkaClientSpoutBuilder extends SpoutBuilder {
 
     private String bootstrapServers;
     private String[] topics;
+    private String groupId;
 
 
     @Bean("kafkaClientSpout")
@@ -31,6 +33,7 @@ public class KafkaClientSpoutBuilder extends SpoutBuilder {
 
     private KafkaSpoutConfig<String, String> getKafkaSpoutConfig() {
         KafkaSpoutConfig.Builder<String, String> builder = KafkaSpoutConfig.builder(bootstrapServers, topics);
+        builder.setGroupId(groupId);
         return builder.build();
     }
 

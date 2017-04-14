@@ -9,12 +9,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 旧版的Scala版本kafka API实现（不推荐）
+ * 偏移量写入zk
  * Created by xiaolong.qiu on 2017/3/29.
  */
 @Getter
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "storm.spout.kafkaSpout")
+@Deprecated
 public class KafkaSpoutBuilder extends SpoutBuilder{
 
     private String brokerZkStr;

@@ -5,10 +5,10 @@ import com.maxplus1.demo.storm.bolt.WordCountBolt;
 import com.maxplus1.demo.storm.bolt.WordCountToRedisBolt;
 import com.maxplus1.demo.storm.bolt.builder.*;
 import com.maxplus1.demo.storm.spout.KafkaProducerSpout;
+import com.maxplus1.demo.storm.spout.builder.KafkaClientSpoutBuilder;
 import com.maxplus1.demo.storm.spout.builder.KafkaProducerSpoutBuilder;
-import com.maxplus1.demo.storm.spout.builder.KafkaSpoutBuilder;
 import org.apache.storm.jdbc.bolt.JdbcInsertBolt;
-import org.apache.storm.kafka.KafkaSpout;
+import org.apache.storm.kafka.spout.KafkaSpout;
 import org.apache.storm.starter.bolt.IntermediateRankingsBolt;
 import org.apache.storm.starter.bolt.RollingCountBolt;
 import org.apache.storm.starter.bolt.TotalRankingsBolt;
@@ -51,10 +51,15 @@ public class DemoTopologyBuilder {
     private TotalRankingsBolt totalRankingsWordCountBolt;
 
 
+/*    @Autowired
+    private KafkaSpout kafkaSpout;
+    @Autowired
+    private KafkaSpoutBuilder kafkaSpoutBuilder;*/
+
     @Autowired
     private KafkaSpout kafkaSpout;
     @Autowired
-    private KafkaSpoutBuilder kafkaSpoutBuilder;
+    private KafkaClientSpoutBuilder kafkaSpoutBuilder;
 
     @Autowired
     private SplitSentenceBolt splitSentenceBolt;

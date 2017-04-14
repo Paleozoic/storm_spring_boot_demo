@@ -24,7 +24,7 @@ public class WordCountBolt extends BaseRichBolt {
     /**
      * 每个Bolt用来存放单词计数的Map
      */
-    private Map<String, Integer> counts = Maps.newHashMap();
+    private Map<String, Long> counts = Maps.newHashMap();
 
     private OutputCollector collector;
 
@@ -41,7 +41,7 @@ public class WordCountBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
         String word = tuple.getString(0); //分词得到的word，Tuple里面只有1个元素（单词）
-        Integer count = counts.get(word);
+        Long count = counts.get(word);
         counts.put(word, count = count==null?1:count+1);
         log.debug("{}===>>>{}",word,count);
         this.collector.emit(new Values(word,count));
