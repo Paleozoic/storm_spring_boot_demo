@@ -81,28 +81,50 @@ public class DemoTopologyBuilder {
     @Autowired
     private WordCountToRedisBolt wordCountToRedisBolt;
 
+    /**
+     * 模拟一个监控系统的实现
+     * @return
+     */
     @Bean
     public TopologyBuilder buildTopology() {
         TopologyBuilder builder = new TopologyBuilder();
-        //产生随机句子写入kafka
+        //产生随机句子写入kafka（用于模拟实际生产环境中生产者往Kafka写消息的动作）
         builder.setSpout(kafkaProducerSpoutBuilder.getId(), kafkaProducerSpout, kafkaProducerSpoutBuilder.getParallelismHint());
 
         //统计WordCount
-
         //读取kafka作为数据源，输入句子给下游
         builder.setSpout(kafkaSpoutBuilder.getId(), kafkaSpout, kafkaSpoutBuilder.getParallelismHint());
 
 
-        //将句子拆分成单词，上游数据源为kafka spout
+        //将句子拆分成单词，上游数据源为kafka spout（实际上的业务日志清洗规则）
         builder.setBolt(splitSentenceBoltBuilder.getId(), splitSentenceBolt, splitSentenceBoltBuilder.getParallelismHint())
                 .shuffleGrouping(kafkaSpoutBuilder.getId());
 
-        //滑动窗口统计的单词计数，上游数据源为分词bolt。数据分组为fieldsGrouping，在这里即同样的单词分给同一个下游bolt处理
+        /**
+         * 滑动窗口统计的单词计数，上游数据源为分词bolt。数据分组为fieldsGrouping，在这里即同样的单词分给同一个下游bolt处理
+         * rollingWordCountBolt发射的数据：遍历Map<Object, Long>，然后collector.emit(new Values(obj, count, actualWindowLengthInSeconds)) 即将每个对象计数分别往下游发送
+         */
         builder.setBolt(rollingWordCountBoltBuilder.getId(),rollingWordCountBolt,rollingWordCountBoltBuilder.getParallelismHint())
                 .fieldsGrouping(splitSentenceBoltBuilder.getId(),new Fields("word"));
-        //滑动窗口数据写入Redis
+
+        /**
+         * 下游收到滑动窗口的数据并写入Redis。那么此时在Redis的数据便是滑动窗口的实时数据了。前台页面直接定时轮询key即可实现实时监控。
+         */
         builder.setBolt(wordCountToRedisBoltBuilder.getId(),wordCountToRedisBolt,wordCountToRedisBoltBuilder.getParallelismHint())
                 .shuffleGrouping(rollingWordCountBoltBuilder.getId());
+
+
+
+        //分词统计数据发送，相同的单词发送到相同的bolt，上游数据源为分词bolt。每天汇总一次数据，
+        builder.setBolt(wordCountBoltBuilder.getId(), wordCountBolt, wordCountBoltBuilder.getParallelismHint())
+                .fieldsGrouping(splitSentenceBoltBuilder.getId(), new Fields("word"));
+
+        //同样的单词分到一个bolt处理（防止多个bolt的sql connection处理同一个单词），分词数据写入Mysql
+        builder.setBolt(wordCountToMySQLBoltBuilder.getId(),wordCountToMySQLBolt,wordCountToMySQLBoltBuilder.getParallelismHint())
+                .fieldsGrouping(wordCountBoltBuilder.getId(), new Fields("word"));
+
+
+
 
         //滑动窗口topN
         /**
@@ -114,32 +136,27 @@ public class DemoTopologyBuilder {
          * {@link org.apache.storm.starter.tools.Rankable}:可自然降序排列接口
          * {@link org.apache.storm.starter.tools.RankableObjectWithFields}:RankableObjectWithFields是Rankable的实现类，根据Fields实现Rank
          */
-        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
-                .globalGrouping(rollingWordCountBoltBuilder.getId());
+//        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
+//                .globalGrouping(rollingWordCountBoltBuilder.getId());
 
         /**
          * 将IntermediateRankingsBolt统计的Rankings全部汇聚于一个bolt实例（TotalRankingsBolt）进行统一的Rankings统计。类似与hadoop的reduce。
          * globalGrouping意为将数据分配给同一个task处理。
          * {@link org.apache.storm.starter.bolt.TotalRankingsBolt} 合并Rankings
          * PS：这里是汇聚每个IntermediateRankingsBolt上的Rankings。所以需要通过globalGrouping保证所有Tuple发送给一个bolt的一个task处理（保证所有数据进入同一个bolt实例）
+         * TODO: 那么ParallelismHint对于globalGrouping是否就是没有用了呢？
          */
-        builder.setBolt(totalRankingsWordCountBoltBuilder.getId(), totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
-                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
+//        builder.setBolt(totalRankingsWordCountBoltBuilder.getId(), totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
+//                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
 
 
-        //分词统计数据发送，相同的单词发送到相同的bolt，上游数据源为分词bolt
-        builder.setBolt(wordCountBoltBuilder.getId(), wordCountBolt, wordCountBoltBuilder.getParallelismHint())
-                .fieldsGrouping(splitSentenceBoltBuilder.getId(), new Fields("word"));
 
-        //分词数据写入Mysql
-        builder.setBolt(wordCountToMySQLBoltBuilder.getId(),wordCountToMySQLBolt,wordCountToMySQLBoltBuilder.getParallelismHint())
-                .shuffleGrouping(wordCountBoltBuilder.getId());
 
         //所有单词的topN
-        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
-                .fieldsGrouping(wordCountBoltBuilder.getId(), new Fields("word"));
-        builder.setBolt(totalRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
-                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
+//        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
+//                .fieldsGrouping(wordCountBoltBuilder.getId(), new Fields("word"));
+//        builder.setBolt(totalRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
+//                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
 
         return builder;
     }

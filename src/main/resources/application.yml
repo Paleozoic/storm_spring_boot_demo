@@ -45,17 +45,18 @@ spring:
         max-active: 8
         max-wait: -1
   kafka:
-    bootstrap-servers: cna12:9092,cna13:9092,cna14:9092
+    bootstrap-servers: CDH-Node1:9092,CDH-Node2:9092,CDH-Node3:9092
 
 ################### Kafka Topic ###################
 #(1)脚本手工创建
-# bin/kafka-topics.sh --zookeeper cna12:2181 --create --topic stormTest --replication-factor 2 --partitions 3
+# bin/kafka-topics.sh --zookeeper CDH-Node1:2181 --create --topic stormTest --replication-factor 2 --partitions 3
 # –topic指定topic name
 # –partitions指定分区数，这个参数需要根据broker数和数据量决定，正常情况下，每个broker上两个partition最好；
 # –replication-factor指定partition的replicas数，建议设置为2；
 #(2)程序自动创建：
 # 开启自动创建配置：auto.create.topics.enable=true
 # 使用程序直接往kafka中相应的topic发送数据，如果topic不存在就会按默认配置进行创建。
+#(3)消费Kafka ： bin/kafka-console-consumer.sh  --zookeeper CDH-Node1:2181  --topic stormTest --from-beginning
 ################### Kafka Topic ###################
 
 ################### Redis Single Node ###################
@@ -93,26 +94,27 @@ storm:
     kafkaSpout:
           parallelismHint: 3
           topic: stormTest
-          brokerZkStr: cna12:2181,cna13:2181,cna14:2181
+          brokerZkStr: CDH-Node1:2181,CDH-Node2:2181,CDH-Node3:2181
           zkRoot: /zkRootTest
     kafkaClientSpout:
       parallelismHint: 3
       groupId: stormTestGroupId
       topics:
         - stormTest
-      bootstrapServers: cna12:9092,cna13:9092,cna14:9092
+      bootstrapServers: CDH-Node1:9092,CDH-Node2:9092,CDH-Node3:9092
   bolt:
     splitSentenceBolt:
         parallelismHint: 3
     wordCountBolt:
         parallelismHint: 3
+        emitFrequencyInSeconds: 60
     wordCountToRedisBolt:
         parallelismHint: 3
     wordCountToMySQLBolt:
         parallelismHint: 3
         tableName: test.word_count
         queryTimeoutSecs: 30
-        insertQuery: replace into test.word_count(word,count) values (?,?)
+        insertQuery: INSERT INTO test.word_count(targetDate,word,`count`) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `count`=`count`+?
     rollingWordCountBolt:
         parallelismHint: 3
         windowLengthInSeconds: 300

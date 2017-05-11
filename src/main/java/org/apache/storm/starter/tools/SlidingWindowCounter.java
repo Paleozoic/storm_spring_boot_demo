@@ -86,11 +86,16 @@ public final class SlidingWindowCounter<T> implements Serializable {
     this.tailSlot = slotAfter(headSlot);
   }
 
+  /**
+   * 头部slot的计数+1
+   * @param obj
+   */
   public void incrementCount(T obj) {
     objCounter.incrementCount(obj, headSlot);
   }
 
   /**
+   * 获取当前时间窗口的对象计数，并且将窗口滑动至下一个时间窗口。同时
    * Return the current (total) counts of all tracked objects, then advance the window.
    * <p/>
    * Whenever this method is called, we consider the counts of the current sliding window to be available to and
@@ -107,11 +112,21 @@ public final class SlidingWindowCounter<T> implements Serializable {
     return counts;
   }
 
+  /**
+   * 移动至下一个时间窗口（slot）
+   */
   private void advanceHead() {
     headSlot = tailSlot;
     tailSlot = slotAfter(tailSlot);
   }
 
+  /**
+   * slot+1之后对windowLengthInSlots（即slot总数）取模，得到的是下一个时间窗口的slot。所以称之为slotAfter
+   * 为什么不是slot++？因为允许循环，即最后1个slot是windowLengthInSlots时，下一个slot应为0
+   * 从这里看来tailSlot应该命名为nextSlot更好
+   * @param slot
+   * @return
+   */
   private int slotAfter(int slot) {
     return (slot + 1) % windowLengthInSlots;
   }

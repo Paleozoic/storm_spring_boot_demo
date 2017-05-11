@@ -13,21 +13,36 @@ import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
  * Created by xiaolong.qiu on 2017/4/6.
  */
 public class KafkaProducerSpout extends BaseRichSpout {
 
-    private Random random;
-    private KafkaTemplate<String,String> kafkaTemplate;
+    //模拟生产数据使用
+    private Random random = new Random();
+    private static final String[] sentences = new String[]{"床前明月光", "疑是地上霜", "举头望明月", "低头思故乡"};
+    private static final AtomicIntegerArray arr = new AtomicIntegerArray(4);
+
+    static {
+        //定义计数器，每个句子个发100次
+        arr.set(0, 100);
+        arr.set(1, 100);
+        arr.set(2, 100);
+        arr.set(3, 100);
+    }
+
+    private KafkaTemplate<String, String> kafkaTemplate;
     @Setter
-    private Map<String,Object> kafkaPropertiesMap;
+    private Map<String, Object> kafkaPropertiesMap;
     @Setter
     private String topic;
+
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-        this.random = new Random();
         this.kafkaTemplate = new KafkaTemplate<>(new DefaultKafkaProducerFactory<String, String>(kafkaPropertiesMap));
     }
 
@@ -35,19 +50,14 @@ public class KafkaProducerSpout extends BaseRichSpout {
     public void nextTuple() {
         // 睡眠一段时间后再产生一个数据
         Utils.sleep(100);
-
-        // 句子数组
-        String[] sentences = new String[]{ "the cow jumped over the moon", "an apple a day keeps the doctor away",
-                "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature" };
-
         // 随机选择一个句子
-        String sentence = sentences[random.nextInt(sentences.length)];
-
-        // 将句子写入kafka
-        ListenableFuture<SendResult<String, String>> send = kafkaTemplate.send(topic, sentence);
-
-        //call back
-//        send.addCallback();
+        int index = random.nextInt(sentences.length);
+        int count = arr.decrementAndGet(index);
+        if (count >= 0) {
+            String sentence = sentences[index];
+            // 将句子写入kafka
+            kafkaTemplate.send(topic, sentence);
+        }
     }
 
     @Override

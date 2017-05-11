@@ -15,13 +15,9 @@ public class SplitSentenceBolt extends BaseBasicBolt {
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
         String sentence = input.getStringByField("value");
-        String[] words = sentence.split(" ");//根据空格分词
-        for (String word : words) {
-            word = word.trim();
-            if (!word.isEmpty()) {
-                word = word.toLowerCase();
-                collector.emit(new Values(word));//分词emit，只有1个单词的元组Tuple
-            }
+        for(int i=0;i<sentence.length();i++){
+            char word = sentence.charAt(i);
+            collector.emit(new Values(word+""));//分词emit，只有1个单词的元组Tuple
         }
     }
 
