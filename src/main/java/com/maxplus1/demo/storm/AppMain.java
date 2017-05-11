@@ -44,11 +44,11 @@ public class AppMain {
      */
     private static void localSubmit(String name,TopologyBuilder builder, Config conf)
             throws InterruptedException {
-        conf.setDebug(true);
+        conf.setDebug(false);
         conf.setMaxTaskParallelism(3);
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology(name, conf, builder.createTopology());
-        Thread.sleep(100000);
+        Thread.sleep(1000000);
         cluster.shutdown();
     }
 }

@@ -3,6 +3,7 @@ package com.maxplus1.demo.storm.topology;
 import com.maxplus1.demo.storm.bolt.SplitSentenceBolt;
 import com.maxplus1.demo.storm.bolt.WordCountBolt;
 import com.maxplus1.demo.storm.bolt.WordCountToRedisBolt;
+import com.maxplus1.demo.storm.bolt.WordCountTopNToRedisBolt;
 import com.maxplus1.demo.storm.bolt.builder.*;
 import com.maxplus1.demo.storm.spout.KafkaProducerSpout;
 import com.maxplus1.demo.storm.spout.builder.KafkaClientSpoutBuilder;
@@ -81,6 +82,11 @@ public class DemoTopologyBuilder {
     @Autowired
     private WordCountToRedisBolt wordCountToRedisBolt;
 
+    @Autowired
+    private WordCountTopNToRedisBoltBuilder wordCountTopNToRedisBoltBuilder;
+    @Autowired
+    private WordCountTopNToRedisBolt wordCountTopNToRedisBolt;
+
     /**
      * 模拟一个监控系统的实现
      * @return
@@ -109,6 +115,7 @@ public class DemoTopologyBuilder {
 
         /**
          * 下游收到滑动窗口的数据并写入Redis。那么此时在Redis的数据便是滑动窗口的实时数据了。前台页面直接定时轮询key即可实现实时监控。
+         * Redis的话，个人认为可不使用FieldGrouping，反正是单线程。
          */
         builder.setBolt(wordCountToRedisBoltBuilder.getId(),wordCountToRedisBolt,wordCountToRedisBoltBuilder.getParallelismHint())
                 .shuffleGrouping(rollingWordCountBoltBuilder.getId());
@@ -124,21 +131,17 @@ public class DemoTopologyBuilder {
                 .fieldsGrouping(wordCountBoltBuilder.getId(), new Fields("word"));
 
 
-
-
-        //滑动窗口topN
+        //滑动窗口topN，注意：根据观察（还没看源码）此处TOPN是累计TOPN，而且如果掉出了TOPN，会导致计数清零。
         /**
          * 产生中间数据Rankings，就是统计分配在每个bolt实例里面的单词的Rankings。这里的聚合操作类似于Hadoop的combiner。（Mapper端的reduce）
+         * 同一个对象（"obj"域）需要发送到同一个Bolt求Rankings。
          * {@link org.apache.storm.starter.bolt.IntermediateRankingsBolt}接收的Tuple格式为：(object, object_count, additionalField1,additionalField2, ..., additionalFieldN)，并且根据object_count对object进行排序
-         * {@link org.apache.storm.starter.tools.SlotBasedCounter}: 基于slot的计数器，Map<T, long[]> objToCounts，long[]维护了每个T的每个slot的计数。 windowLengthInSeconds（时间窗口） emitFrequencyInSeconds（发射频率）
-         * {@link org.apache.storm.starter.tools.SlidingWindowCounter}:滑动窗口计数器。每一个时间窗口维护了一个SlotBasedCounter，每隔一个发射频率则相下游发射一个时间窗口的slot。
          * {@link org.apache.storm.starter.tools.Rankings}:自然降序排列
          * {@link org.apache.storm.starter.tools.Rankable}:可自然降序排列接口
          * {@link org.apache.storm.starter.tools.RankableObjectWithFields}:RankableObjectWithFields是Rankable的实现类，根据Fields实现Rank
          */
-//        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
-//                .globalGrouping(rollingWordCountBoltBuilder.getId());
-
+        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId(), intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
+                .fieldsGrouping(rollingWordCountBoltBuilder.getId(),new Fields("obj"));
         /**
          * 将IntermediateRankingsBolt统计的Rankings全部汇聚于一个bolt实例（TotalRankingsBolt）进行统一的Rankings统计。类似与hadoop的reduce。
          * globalGrouping意为将数据分配给同一个task处理。
@@ -146,17 +149,13 @@ public class DemoTopologyBuilder {
          * PS：这里是汇聚每个IntermediateRankingsBolt上的Rankings。所以需要通过globalGrouping保证所有Tuple发送给一个bolt的一个task处理（保证所有数据进入同一个bolt实例）
          * TODO: 那么ParallelismHint对于globalGrouping是否就是没有用了呢？
          */
-//        builder.setBolt(totalRankingsWordCountBoltBuilder.getId(), totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
-//                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
-
-
-
-
-        //所有单词的topN
-//        builder.setBolt(intermediateRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", intermediateRankingsWordCountBolt, intermediateRankingsWordCountBoltBuilder.getParallelismHint())
-//                .fieldsGrouping(wordCountBoltBuilder.getId(), new Fields("word"));
-//        builder.setBolt(totalRankingsWordCountBoltBuilder.getId()+"_All_Words_topN", totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
-//                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
+        builder.setBolt(totalRankingsWordCountBoltBuilder.getId(), totalRankingsWordCountBolt,totalRankingsWordCountBoltBuilder.getParallelismHint())
+                .globalGrouping(intermediateRankingsWordCountBoltBuilder.getId());
+        /**
+         * 滑动窗口topN统计写入Redis
+         */
+        builder.setBolt(wordCountTopNToRedisBoltBuilder.getId(), wordCountTopNToRedisBolt,wordCountTopNToRedisBoltBuilder.getParallelismHint())
+                .globalGrouping(totalRankingsWordCountBoltBuilder.getId());
 
         return builder;
     }

@@ -123,7 +123,8 @@ public final class SlidingWindowCounter<T> implements Serializable {
   /**
    * slot+1之后对windowLengthInSlots（即slot总数）取模，得到的是下一个时间窗口的slot。所以称之为slotAfter
    * 为什么不是slot++？因为允许循环，即最后1个slot是windowLengthInSlots时，下一个slot应为0
-   * 从这里看来tailSlot应该命名为nextSlot更好
+   * （错误：从这里看来tailSlot应该命名为nextSlot更好）
+   * 为什么是tailSlot，因为数组组成一个环，headSlot和tailSlot之间（含）便是一个完整的时间窗口
    * @param slot
    * @return
    */

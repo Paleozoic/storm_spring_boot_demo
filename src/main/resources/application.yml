@@ -91,11 +91,11 @@ storm:
     kafkaProducerSpout:
       parallelismHint: 3
       topic: stormTest
-    kafkaSpout:
-          parallelismHint: 3
-          topic: stormTest
-          brokerZkStr: CDH-Node1:2181,CDH-Node2:2181,CDH-Node3:2181
-          zkRoot: /zkRootTest
+#    kafkaSpout:
+#          parallelismHint: 3
+#          topic: stormTest
+#          brokerZkStr: CDH-Node1:2181,CDH-Node2:2181,CDH-Node3:2181
+#          zkRoot: /zkRootTest
     kafkaClientSpout:
       parallelismHint: 3
       groupId: stormTestGroupId
@@ -107,8 +107,10 @@ storm:
         parallelismHint: 3
     wordCountBolt:
         parallelismHint: 3
-        emitFrequencyInSeconds: 60
+        emitFrequencyInSeconds: 30
     wordCountToRedisBolt:
+        parallelismHint: 3
+    wordCountTopNToRedisBolt:
         parallelismHint: 3
     wordCountToMySQLBolt:
         parallelismHint: 3
@@ -118,11 +120,13 @@ storm:
     rollingWordCountBolt:
         parallelismHint: 3
         windowLengthInSeconds: 300
-        emitFrequencyInSeconds: 60
+        emitFrequencyInSeconds: 30
     intermediateRankingsWordCountBolt:
         parallelismHint: 3
-        topN: 10
+        topN: 2
+        emitFrequencyInSeconds: 30
     totalRankingsWordCountBolt:
         parallelismHint: 3
-        topN: 10
+        topN: 2
+        emitFrequencyInSeconds: 30
 

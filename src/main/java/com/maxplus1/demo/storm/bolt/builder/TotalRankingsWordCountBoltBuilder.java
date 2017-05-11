@@ -17,10 +17,11 @@ import org.springframework.context.annotation.Configuration;
 public class TotalRankingsWordCountBoltBuilder extends BoltBuilder {
 
     private int topN = 10;
+    private int emitFrequencyInSeconds = 60;//每60s发射一次数据
 
     @Bean("totalRankingsWordCountBolt")
     public TotalRankingsBolt buildBolt() {
         super.setId("totalRankingsWordCountBolt");
-        return new TotalRankingsBolt(topN);
+        return new TotalRankingsBolt(topN,emitFrequencyInSeconds);
     }
 }

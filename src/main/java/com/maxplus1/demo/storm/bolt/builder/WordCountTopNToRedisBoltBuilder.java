@@ -1,6 +1,6 @@
 package com.maxplus1.demo.storm.bolt.builder;
 
-import com.maxplus1.demo.storm.bolt.WordCountToRedisBolt;
+import com.maxplus1.demo.storm.bolt.WordCountTopNToRedisBolt;
 import com.maxplus1.demo.utils.Serializer;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,19 +17,19 @@ import org.springframework.context.annotation.DependsOn;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "storm.spout.wordCountToRedisBolt")
+@ConfigurationProperties(prefix = "storm.bolt.wordCountTopNToRedisBolt")
 @DependsOn("redisTemplate")
-public class WordCountToRedisBoltBuilder extends BoltBuilder {
+public class WordCountTopNToRedisBoltBuilder extends BoltBuilder {
 
     @Autowired
     private RedisProperties redisProperties;
 
-    @Bean("wordCountToRedisBolt")
-    public WordCountToRedisBolt buildBolt() {
-        super.setId("wordCountToRedisBolt");
-        WordCountToRedisBolt wordCountToRedisBolt = new WordCountToRedisBolt();
-        wordCountToRedisBolt.setRedisProperties(Serializer.INSTANCE.serialize(redisProperties));
-        return wordCountToRedisBolt;
+    @Bean("wordCountTopNToRedisBolt")
+    public WordCountTopNToRedisBolt buildBolt() {
+        super.setId("wordCountTopNToRedisBolt");
+        WordCountTopNToRedisBolt wordCountTopNToRedisBolt = new WordCountTopNToRedisBolt();
+        wordCountTopNToRedisBolt.setRedisProperties(Serializer.INSTANCE.serialize(redisProperties));
+        return wordCountTopNToRedisBolt;
     }
 
 

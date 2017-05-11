@@ -18,11 +18,12 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "storm.bolt.intermediateRankingsWordCountBolt")
 public class IntermediateRankingsWordCountBoltBuilder extends BoltBuilder {
 
-    private int topN = 10;
+    private int topN = 2;
+    private int emitFrequencyInSeconds = 60;//每60s发射一次数据
 
     @Bean("intermediateRankingsWordCountBolt")
     public IntermediateRankingsBolt buildBolt() {
         super.setId("intermediateRankingsWordCountBolt");
-        return new IntermediateRankingsBolt(topN);
+        return new IntermediateRankingsBolt(topN,emitFrequencyInSeconds);
     }
 }

@@ -1,6 +1,8 @@
 package com.maxplus1.demo.storm.bolt.builder;
 
 import com.maxplus1.demo.storm.bolt.SplitSentenceBolt;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Created by xiaolong.qiu on 2017/3/29.
  */
+@Getter
+@Setter
 @Configuration
 @ConfigurationProperties(prefix = "storm.bolt.splitSentenceBolt")
 public class SplitSentenceBoltBuilder extends BoltBuilder{

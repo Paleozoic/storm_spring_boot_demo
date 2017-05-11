@@ -36,7 +36,7 @@ public final class SlotBasedCounter<T> implements Serializable {
 
   /**
    * TODO: 这里有点疑惑，为何不用队列而是用数组？
-   * 猜测可能是数组重置0应该是比队列出队入队高效的，毕竟数组必须要再次开新的内存空间。
+   * 这里相当于使用数组实现环形链表，且链表元素固定（大小不变）。
    */
   private final Map<T, long[]> objToCounts = new HashMap<T, long[]>();
   private final int numSlots;
@@ -111,7 +111,7 @@ public final class SlotBasedCounter<T> implements Serializable {
   }
 
   /**
-   * 清空Map<T,long[]>里面long[]之和为0的对象计数，释放内存。
+   * 清空Map<T,long[]>里面long[]之和为0的对象计数
    * Remove any object from the counter whose total count is zero (to free up memory).
    */
   public void wipeZeros() {

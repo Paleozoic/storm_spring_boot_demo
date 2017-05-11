@@ -8,13 +8,9 @@ import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.utils.Utils;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 /**
@@ -28,11 +24,11 @@ public class KafkaProducerSpout extends BaseRichSpout {
     private static final AtomicIntegerArray arr = new AtomicIntegerArray(4);
 
     static {
-        //定义计数器，每个句子个发100次
-        arr.set(0, 100);
-        arr.set(1, 100);
-        arr.set(2, 100);
-        arr.set(3, 100);
+        //定义计数器，规定每个句子的发射次数
+        arr.set(0, 5000);
+        arr.set(1, 4000);
+        arr.set(2, 3000);
+        arr.set(3, 1000);
     }
 
     private KafkaTemplate<String, String> kafkaTemplate;

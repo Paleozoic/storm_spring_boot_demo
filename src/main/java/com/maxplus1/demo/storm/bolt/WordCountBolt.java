@@ -39,8 +39,8 @@ public class WordCountBolt extends BaseBasicBolt {
         if (TupleUtils.isTick(tuple)) {
             long targetDate = System.currentTimeMillis();
             //落地，发送给下游写入Mysql
-            counts.forEach((k, v) -> {
-                basicOutputCollector.emit(new Values(targetDate, k, v, v));
+            counts.forEach((word, count) -> {
+                basicOutputCollector.emit(new Values(targetDate, word, count, count));
             });
             //清空缓存
             counts.clear();
