@@ -23,7 +23,7 @@ public class buildStormCmd {
         });
         cmd.deleteCharAt(cmd.length()-1);
         cmd.append("\" jar ").append(FINAL_NAME)
-                .append(" org.springframework.boot.loader.JarLauncher ");
+                .append(" com.maxplus1.DemoApplication ");
         System.out.println("====================================");
         System.out.println(cmd.toString());
         System.out.println("====================================");

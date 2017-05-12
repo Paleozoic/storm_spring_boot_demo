@@ -24,8 +24,8 @@ public class AppMain {
 
     public void Laugher() throws InvalidTopologyException, AuthorizationException, AlreadyAliveException, InterruptedException {
         Config config = new Config();
-//        remoteSubmit(stormProps,topologyBuilder,config);
-        localSubmit(stormProps.getTopologyName(),topologyBuilder,config);
+        remoteSubmit(stormProps,topologyBuilder,config);
+//        localSubmit(stormProps.getTopologyName(),topologyBuilder,config);
     }
 
 
@@ -44,11 +44,11 @@ public class AppMain {
      */
     private static void localSubmit(String name,TopologyBuilder builder, Config conf)
             throws InterruptedException {
-        conf.setDebug(false);
+        conf.setDebug(true);
         conf.setMaxTaskParallelism(3);
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology(name, conf, builder.createTopology());
-        Thread.sleep(1000000);
+        Thread.sleep(100000);
         cluster.shutdown();
     }
 }

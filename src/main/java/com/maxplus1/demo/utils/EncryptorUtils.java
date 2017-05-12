@@ -80,7 +80,7 @@ public class EncryptorUtils {
 
 
     public static void main(String[] args) throws Exception {
-        String[] vals = new String[]{"holmes","holmes@123"};
+        String[] vals = new String[]{"test","test@123"};
         for (String source : vals) {
             System.out.println("原文: " + source);
             String encryptData = encrypt(source.getBytes());

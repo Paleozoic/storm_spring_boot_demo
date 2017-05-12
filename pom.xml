@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.maxplus1.storm</groupId>
-	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <groupId>com.maxplus1.storm</groupId>
+    <artifactId>demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>storm_demo</name>
-	<description>Demo project for Spring Boot</description>
+    <name>storm_demo</name>
+    <description>Demo project for Spring Boot</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.2.RELEASE</version>
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+    </parent>
 
-	<properties>
+    <properties>
         <finalName>StormDemo</finalName>
         <start-class>com.maxplus1.DemoApplication</start-class>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!--<scope.type>provided</scope.type>-->
-		<scope.type>compile</scope.type>
-		<java.version>1.8</java.version>
-		<storm.version>1.1.0</storm.version>
-		<storm.kafka.version>0.10.2.0</storm.kafka.version>
-		<storm.kafka.artifact.id>kafka_${scala.version}</storm.kafka.artifact.id>
-		<scala.version>2.10</scala.version>
-		<lombok.version>1.16.8</lombok.version>
-	</properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <scope.type>provided</scope.type>
+        <!--<scope.type>compile</scope.type>-->
+        <java.version>1.8</java.version>
+        <storm.version>1.1.0</storm.version>
+        <storm.kafka.version>0.10.2.0</storm.kafka.version>
+        <storm.kafka.artifact.id>kafka_${scala.version}</storm.kafka.artifact.id>
+        <scala.version>2.10</scala.version>
+        <lombok.version>1.16.8</lombok.version>
+    </properties>
 
-	<dependencies>
+    <dependencies>
 
-		<!--<dependency>-->
-			<!--<groupId>org.apache.storm</groupId>-->
-			<!--<artifactId>storm-starter</artifactId>-->
-			<!--<version>${storm.version}</version>-->
-			<!--<scope>${scope.type}</scope>-->
-		<!--</dependency>-->
-		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-core</artifactId>
-			<version>${storm.version}</version>
-			<scope>${scope.type}</scope>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.storm</groupId>-->
+        <!--<artifactId>storm-starter</artifactId>-->
+        <!--<version>${storm.version}</version>-->
+        <!--<scope>${scope.type}</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-core</artifactId>
+            <version>${storm.version}</version>
+            <scope>${scope.type}</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>log4j-over-slf4j</artifactId>
@@ -52,30 +52,30 @@
                 </exclusion>
             </exclusions>
         </dependency>
-		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-kafka</artifactId>
-			<version>${storm.version}</version>
-			<!--<scope>${scope.type}</scope>-->
-		</dependency>
-		<dependency>
-			<groupId>org.apache.storm</groupId>
-			<artifactId>storm-kafka-client</artifactId>
-			<version>${storm.version}</version>
-			<!--<scope>${scope.type}</scope>-->
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>${storm.kafka.artifact.id}</artifactId>
-			<version>${storm.kafka.version}</version>
-			<!--<scope>${scope.type}</scope>-->
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka-clients</artifactId>
-			<version>${storm.kafka.version}</version>
-			<!--<scope>${scope.type}</scope>-->
-		</dependency>
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-kafka</artifactId>
+            <version>${storm.version}</version>
+            <!--<scope>${scope.type}</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.storm</groupId>
+            <artifactId>storm-kafka-client</artifactId>
+            <version>${storm.version}</version>
+            <!--<scope>${scope.type}</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>${storm.kafka.artifact.id}</artifactId>
+            <version>${storm.kafka.version}</version>
+            <!--<scope>${scope.type}</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${storm.kafka.version}</version>
+            <!--<scope>${scope.type}</scope>-->
+        </dependency>
         <dependency>
             <groupId>org.apache.storm</groupId>
             <artifactId>storm-jdbc</artifactId>
@@ -83,23 +83,23 @@
             <!--<scope>${scope.type}</scope>-->
         </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency> <!-- 引入log4j2依赖 -->
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-log4j2</artifactId>
-		</dependency>
-		<dependency>  <!-- 加上这个才能辨认到log4j2.yml文件 -->
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-yaml</artifactId>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency> <!-- 引入log4j2依赖 -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>  <!-- 加上这个才能辨认到log4j2.yml文件 -->
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
         </dependency>
         <!-- 引入jackson依赖 -->
         <dependency>
@@ -112,28 +112,28 @@
             <artifactId>spring-boot-loader</artifactId>
         </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
 
-		<dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.0.27</version>
@@ -160,96 +160,31 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.10</version>
-		</dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
 
-		<!-- dev tools -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-			 <scope>${scope.type}</scope>
-		</dependency>
+        <!-- dev tools -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>${scope.type}</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
-	<build>
-        <!-- scope provided是不生效的： http://docs.spring.io/spring-boot/docs/current/maven-plugin/examples/exclude-dependency.html -->
+    <build>
         <finalName>${finalName}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.apache.storm</groupId>
-                            <artifactId>storm-core</artifactId>
-                        </exclude>
-                        <!--<exclude>-->
-                            <!--<groupId>org.apache.storm</groupId>-->
-                            <!--<artifactId>storm-kafka</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>org.apache.storm</groupId>-->
-                            <!--<artifactId>storm-kafka-client</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>org.apache.kafka</groupId>-->
-                            <!--<artifactId>${storm.kafka.artifact.id}</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>org.apache.kafka</groupId>-->
-                            <!--<artifactId>kafka-clients</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>org.apache.storm</groupId>-->
-                            <!--<artifactId>storm-jdbc</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>org.scala-lang</groupId>-->
-                            <!--<artifactId>scala-library</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<artifactId>clojure</artifactId>-->
-                            <!--<groupId>org.clojure</groupId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>org.apache.curator</groupId>-->
-                            <!--<artifactId>curator-client</artifactId>-->
-                        <!--</exclude>-->
-                        <exclude>
-                            <groupId>org.apache.zookeeper</groupId>
-                            <artifactId>zookeeper</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>org.slf4j</groupId>
-                            <artifactId>slf4j-log4j12</artifactId>
-                        </exclude>
-                        <!--<exclude>-->
-                            <!--<groupId>com.google.guava</groupId>-->
-                            <!--<artifactId>guava</artifactId>-->
-                        <!--</exclude>-->
-                        <!--<exclude>-->
-                            <!--<groupId>com.zaxxer</groupId>-->
-                            <!--<artifactId>HikariCP</artifactId>-->
-                        <!--</exclude>-->
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-			</plugin>
+        <plugins>
+            <!-- Skip test -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -258,78 +193,51 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+            <!-- jar没有变更可以去掉 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>run</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <!--<tasks> //打包fatjar，但是jar太多  效率低，而且运行报错
-                                <unjar src="${project.build.directory}/${finalName}.jar" dest="${project.build.directory}/${finalName}" />
-                                <unjar dest="${project.build.directory}/${finalName}/BOOT-INF/classes">
-                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar"/>
-                                </unjar>
-                                <delete>
-                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar" />
-                                </delete>
-                                <delete file="${project.build.directory}/${finalName}.jar" />
-                                <zip destfile="${project.build.directory}/${finalName}.jar" basedir="${project.build.directory}/${finalName}" />
-                            </tasks>-->
-                            <tasks>
-                                <unjar src="${project.build.directory}/${finalName}.jar" dest="${project.build.directory}/${finalName}" />
-                                <move todir="${project.build.directory}/libs">
-                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar"/>
-                                </move>
-                                <delete>
-                                    <fileset dir="${project.build.directory}/${finalName}/BOOT-INF/lib" includes="*.jar" />
-                                </delete>
-                                <delete file="${project.build.directory}/${finalName}.jar" />
-                                <zip destfile="${project.build.directory}/${finalName}.jar" basedir="${project.build.directory}/${finalName}" />
-                                <!-- 如果jar没有变更，则可以注释此行 -->
-                                <!--<zip destfile="${project.build.directory}/${finalName}.zip">-->
-                                    <!--<fileset dir="${project.build.directory}" includes="libs/*.jar" />-->
-                                    <!--<fileset dir="${project.build.directory}" includes="${finalName}.jar" />-->
-                                <!--</zip>-->
-                            </tasks>
+                            <outputDirectory>target/libs</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                            <excludeArtifactIds>zookeeper,slf4j-log4j12,log4j</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <!-- 不需要压缩可以去掉 -->
             <!--<plugin>-->
                 <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-jar-plugin</artifactId>-->
-                <!--<version>2.6</version>-->
-                <!--<configuration>-->
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<addClasspath>true</addClasspath>-->
-                            <!--<classpathPrefix>BOOT-INF/lib/</classpathPrefix>-->
-                        <!--</manifest>-->
-                    <!--</archive>-->
-                <!--</configuration>-->
+                <!--<artifactId>maven-antrun-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<tasks>-->
+                                <!--&lt;!&ndash; 压缩 &ndash;&gt;-->
+                                <!--<zip destfile="${project.build.directory}/${finalName}.zip">-->
+                                    <!--<fileset dir="${project.build.directory}" includes="libs/*.jar"/>-->
+                                    <!--<fileset dir="${project.build.directory}" includes="${finalName}.jar"/>-->
+                                <!--</zip>-->
+                            <!--</tasks>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
             <!--</plugin>-->
-            <!--<plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-            </plugin>-->
+
         </plugins>
-	</build>
+    </build>
 
 
 </project>

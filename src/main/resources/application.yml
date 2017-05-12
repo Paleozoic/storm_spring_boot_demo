@@ -3,9 +3,9 @@ spring:
       test1db:
           name: test1db
           type: com.alibaba.druid.pool.DruidDataSource
-          url: jdbc:mysql://192.168.19.20:3306/test?useUnicode=true&characterEncoding=UTF-8
-          username: ENC(aG9sbWVz) #holmes
-          password: ENC(aG9sbWVzQDEyMw==) #holmes@123
+          url: jdbc:mysql://192.168.20.20:3306/test?useUnicode=true&characterEncoding=UTF-8
+          username: ENC(dGVzdA==) #test
+          password: ENC(dGVzdEAxMjM=) #test@123
           driver-class-name: com.mysql.jdbc.Driver
           minIdle: 1
           maxActive: 2
@@ -19,9 +19,9 @@ spring:
       test2db:
           name: test2db
           type: com.alibaba.druid.pool.DruidDataSource
-          url: jdbc:mysql://192.168.19.20:3306/test?useUnicode=true&characterEncoding=UTF-8
-          username: ENC(aG9sbWVz) #holmes
-          password: ENC(aG9sbWVzQDEyMw==) #holmes@123
+          url: jdbc:mysql://192.168.20.20:3306/test?useUnicode=true&characterEncoding=UTF-8
+          username: ENC(dGVzdA==) #test
+          password: ENC(dGVzdEAxMjM=) #test@123
           driver-class-name: com.mysql.jdbc.Driver
           minIdle: 1
           maxActive: 2
@@ -37,7 +37,7 @@ spring:
       password:
       cluster:
         nodes:
-            - 192.168.19.33:22400
+            - 192.168.20.33:22400
         maxRedirects: 6
       pool:
         max-idle: 8
@@ -63,7 +63,7 @@ spring:
 #spring:
 #  redis:
 #    database: 0
-#    host: 192.168.19.33:22400
+#    host: 192.168.20.33:22400
 #    password:
 #    port: 22400
 #    pool:
@@ -84,9 +84,9 @@ storm:
   datasource:
       mysql:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-        dataSourceUrl: jdbc:mysql://192.168.19.20:3306/test?useUnicode=true&characterEncoding=UTF-8
-        dataSourceUser: ENC(aG9sbWVz) #holmes
-        dataSourcePassword: ENC(aG9sbWVzQDEyMw==) #holmes@123
+        dataSourceUrl: jdbc:mysql://192.168.20.20:3306/test?useUnicode=true&characterEncoding=UTF-8
+        dataSourceUser: ENC(dGVzdA==) #test
+        dataSourcePassword: ENC(dGVzdEAxMjM=) #test@123
   spout:
     kafkaProducerSpout:
       parallelismHint: 3

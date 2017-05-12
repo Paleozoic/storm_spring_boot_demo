@@ -8,6 +8,10 @@
 
 # word count table defination
 ```sql
+CREATE USER 'test'@'%' IDENTIFIED BY 'test@123';
+GRANT ALL PRIVILEGES ON test.* TO test@'%';
+FLUSH  PRIVILEGES ; 
+
 CREATE TABLE `word_count` (
   `targetDate` date NOT NULL,
   `word` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -26,7 +30,7 @@ CREATE TABLE `word_count` (
 
 # PS
 - 如果Spring Boot的很多对象实现了序列化接口就好办多了
-
+- 该应用已经在集群和本地模式皆可运行。
 
 # BUG
 测试发现写入Kafka的数据正确，但是KafkaSpout消费的时候，偶尔会出现少量的重复消息。
@@ -36,4 +40,10 @@ CREATE TABLE `word_count` (
 - offset没提交，重复消费
 - 没有ACK，重复发送
 - 网络抖动/启动机制/or其他？？？
+
+# 效果图
+拓扑图:![拓扑图](https://github.com/Paleozoic/storm_spring_boot_demo/img/topo.png)
+Kafka的模拟数据:![Kafka的模拟数据](https://github.com/Paleozoic/storm_spring_boot_demo/img/kafka.png)
+MySQL的归档数据:![MySQL的归档数据](https://github.com/Paleozoic/storm_spring_boot_demo/img/mysql.png)
+Redis的实时数据:![Redis的实时数据](https://github.com/Paleozoic/storm_spring_boot_demo/img/redis.png)
 
