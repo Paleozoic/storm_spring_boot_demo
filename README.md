@@ -40,6 +40,7 @@ CREATE TABLE `word_count` (
 - offset没提交，重复消费
 - 没有ACK，重复发送
 - 网络抖动/启动机制/or其他？？？
+- 最后定位原因是：bolt继承了BaseBasicBolt，ack失败后调用fail重发，但是缓存count却没有还原。
 
 # 效果图
 拓扑图:![拓扑图](https://github.com/Paleozoic/storm_spring_boot_demo/blob/master/img/topo.png)
