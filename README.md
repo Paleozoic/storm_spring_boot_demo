@@ -40,11 +40,11 @@ CREATE TABLE `word_count` (
 - offset没提交，重复消费
 - 没有ACK，重复发送
 - 网络抖动/启动机制/or其他？？？
-- 最后定位原因是：bolt继承了BaseBasicBolt，ack失败后调用fail重发，但是缓存count却没有还原。
+- 最后定位原因是：bolt继承了BaseBasicBolt，ack失败后调用fail重发，但是缓存count却没有还原。不过最后还是只能At Least Once。
 
 # 效果图
 拓扑图:![拓扑图](https://github.com/Paleozoic/storm_spring_boot_demo/blob/master/img/topo.png)
 Kafka的模拟数据:![Kafka的模拟数据](https://github.com/Paleozoic/storm_spring_boot_demo/blob/master/img/kafka.png)
-MySQL的归档数据:![MySQL的归档数据](https://github.com/Paleozoic/storm_spring_boot_demo/blob/master/img/mysql.png)
+MySQL的归档数据(At Least Once):![MySQL的归档数据](https://github.com/Paleozoic/storm_spring_boot_demo/blob/master/img/mysql.png)
 Redis的实时数据:![Redis的实时数据](https://github.com/Paleozoic/storm_spring_boot_demo/blob/master/img/redis.png)
 

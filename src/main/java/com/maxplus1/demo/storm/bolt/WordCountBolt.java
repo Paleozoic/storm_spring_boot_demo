@@ -66,7 +66,6 @@ public class WordCountBolt extends BaseRichBolt {
             });
             //清空缓存
             counts.clear();
-            ack(tuple);
         } else {
             String word = tuple.getStringByField("word");
             Long count = counts.get(word);
@@ -76,15 +75,4 @@ public class WordCountBolt extends BaseRichBolt {
         }
     }
 
-
-    private void ack(Tuple tuple){
-        try {
-            outputCollector.ack(tuple);
-        } catch (FailedException e) {
-            if(e instanceof ReportedFailedException) {
-                outputCollector.reportError(e);
-            }
-            outputCollector.fail(tuple);
-        }
-    }
 }
